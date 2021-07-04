@@ -1,0 +1,70 @@
+# Define on 20210424 to initialize 2 node kubernetes cluster for K8S Cluster, 
+# For additional worker node, just copy and paste worker node config part and rename with new worker node.
+# Also add additinal VMs IP address in host config file for fixed IP address
+#
+# vagrant box add ubuntu/bionic64
+
+Vagrant.configure("2") do |config|
+  #define image
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.box_check_update = false
+  config.ssh.forward_agent = true
+  config.ssh.forward_x11 = true
+  #config.disksize.size = '15GB'
+  #config.vm.network "private_network", type: "dhcp"
+  #config.vm.network "private_network", ip: "192.168.56.80"
+
+
+#define k8s-master, provision using automatic installation script
+  config.vm.define "k8s-master", autostart: false do |node|
+    #node.disksize.size = '10GB'
+    node.vm.box = "ubuntu/bionic64"
+    node.vm.provider "virtualbox" do |vb|
+      vb.name = "k8s-master"
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+    node.vm.hostname = "k8s-master"
+    node.vm.network "private_network", ip: "192.168.56.71"  
+    node.vm.network "forwarded_port", guest: 22, host: "7122", auto_correct: true
+    node.vm.provision "shell", run: "always", inline: "ip route add default via 192.168.56.1"
+    node.vm.provision :shell, :path => "setup-hosts.sh"
+  end
+
+
+#define k8s-worker1, provision using automatic installation script
+  config.vm.define "k8s-worker1", autostart: false do |node|
+    #node.disksize.size = '10GB'
+    node.vm.box = "ubuntu/bionic64"
+    node.vm.provider "virtualbox" do |vb|
+      vb.name = "k8s-worker1"
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+    node.vm.hostname = "k8s-worker1"
+    node.vm.network "private_network", ip: "192.168.56.72"  
+    node.vm.network "forwarded_port", guest: 22, host: "7222", auto_correct: true
+    node.vm.provision "shell", run: "always", inline: "ip route add default via 192.168.56.1"
+    node.vm.provision :shell, :path => "setup-hosts.sh"
+  end
+
+# new worker node config, if needed as per your requirements
+# define k8s-worker2, provision using automatic installation script
+config.vm.define "k8s-worker2", autostart: false do |node|
+  #node.disksize.size = '10GB'
+  node.vm.box = "ubuntu/bionic64"
+  node.vm.provider "virtualbox" do |vb|
+    vb.name = "k8s-worker2"
+    vb.memory = 4096
+    vb.cpus = 2
+  end
+  node.vm.hostname = "k8s-worker2"
+  node.vm.network "private_network", ip: "192.168.56.73"  
+  node.vm.network "forwarded_port", guest: 22, host: "7223", auto_correct: true
+  node.vm.provision "shell", run: "always", inline: "ip route add default via 192.168.56.1"
+  node.vm.provision :shell, :path => "setup-hosts.sh"
+end
+
+
+
+end
