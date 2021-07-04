@@ -68,7 +68,7 @@ k run client --image=radial/busyboxplus:curl --command -- /bin/sh -c "while true
 k exec -it client -- sh
 k exec client -- curl ip
 
-k run -i --tty busybox --image=busybox:1.28 -- sh  # Run pod as interactive shell
+k run -it busybox --image=busybox:1.28 -- sh  # Run pod as interactive shell
 k attach busybox -c busybox -i -t
 
 # more debugging
