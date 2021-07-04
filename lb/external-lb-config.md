@@ -61,6 +61,46 @@ We are now ready to test our load balancers. To do so let’s move directly to o
 
 ## Ingress controller
 
+Idea: Ingress controller will get external ip from MetalLB (ippool). Later end user application and service will be bind by ingress-controller with configured ingress resource hostname and an external ip address.
+
+Deployment <> Service Exponse <> Ingress Resource with hostname
+
+Layer 4 loadbalancer (metallb) which can carry traffic to layer 7 load balancer (nginx-ingress). 
+
+An example -
+```bash
+# note: dry-run option is to check config before creating resource, export do="--dry-run=client -o yaml"
+kubectl create namespace demo
+kubectl create deployment nginx --image=nginx -n demo $do
+kubectl expose deployment nginx --port=80 --name nginx-svc -n demo $do
+kubectl create ingress nginx-ingress --rule="nginx.test.org/*=nginx-svc:80" -n demo $do
+
+cat <<EOF>>ninx-ingress.yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  name: nginx-ingress
+  namespace: demo
+spec:
+  rules:
+  - host: nginx.test.org
+    http:
+      paths:
+      - backend:
+          serviceName: nginx-svc
+          servicePort: 80
+EOF
+
+kubectl create -f ninx-ingress.yaml
+
+$ kubectl -n demo get ingress
+
+NAME    CLASS    HOSTS            ADDRESS        PORTS     AGE
+nginx-ingress   <none>   nginx.test.org   10.10.39.200   80, 443   47h
+
+```
 
 <br>
 
