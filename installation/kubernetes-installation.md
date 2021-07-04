@@ -34,18 +34,18 @@ vagrant up k8s-master
 vagrant up k8s-worker1
 ```
 
-Install kubernetes software in k8s-master node
+Install kubernetes software [using](k8s_install_master.sh) in k8s-master node
 ```bash
 # install kubernetes software in cks-master node, upload cks_install_master.sh script
 vagrant ssh k8s-master
-sudo ./cks_install_master.sh
+sudo ./k8s_install_master.sh
 ```
 
-Install kubernetes software in k8s-worker1 node
+Install kubernetes software [using](k8s_install_worker.sh) in k8s-worker1 node
 ```bash
 # install kubernetes software in cks-worker1 node, upload cks_install_worker.sh script
 vagrant ssh k8s-worker1
-sudo ./cks_install_worker.sh
+sudo ./k8s_install_worker.sh
 ```
 
 ---
