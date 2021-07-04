@@ -8,7 +8,8 @@ Kubernetes related experiment, configuration and documentation.
   - [LoadBalancer](#loadbalancer)
 
 ## Installation
-
+- [Kubernetes Installation using Vagrant + Virtualbox](installation/kubernetes-installation.md)
+  
 ## Commands
 - [Kubernetes Command Cheatsheet](k8s-cli.md)
 
