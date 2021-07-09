@@ -4,10 +4,11 @@
   - [Document History](#document-history)
   - [Introduction](#introduction)
     - [Vim profile to setup](#vim-profile-to-setup)
-    - [Environment varible to setup](#environment-varible-to-setup)
+    - [Environment variable to setup](#environment-variable-to-setup)
   - [K8s Imperative Command](#k8s-imperative-command)
     - [Create a busybox pod for testing](#create-a-busybox-pod-for-testing)
-    - [Create a depoloyment and expose service](#create-a-depoloyment-and-expose-service)
+    - [Create a deployment and expose service](#create-a-deployment-and-expose-service)
+    - [Activity on deployment](#activity-on-deployment)
     - [Add labels](#add-labels)
     - [Create Ingress Resource](#create-ingress-resource)
     - [Get events](#get-events)
@@ -41,7 +42,7 @@ EOF
 # other options - paste, nopaste
 ```
 
-### Environment varible to setup
+### Environment variable to setup
 ```bash
 cat <<EOF>kalias.sh
 alias k="kubectl"
@@ -75,12 +76,35 @@ k attach busybox -c busybox -i -t
 k exec client -- nslookup client
 ```
 
-### Create a depoloyment and expose service
+### Create a deployment and expose service
 ```bash
-k create deployment nginx --image=nginx -r 3
+k create deployment nginx-deploy --image=nginx -r 3
 
 #port=service port, target-port=pod port,
-k expose deployment nginx --port=80 --target-port=8080 --name nginx-svc
+k expose deployment nginx-deploy --port=80 --target-port=8080 --name nginx-svc
+```
+### Activity on deployment
+```bash
+# change image version and record will keep history of the given command
+k set image deploy nginx-deploy nginx=nginx:1.16.1 --record
+
+# edit deployment 
+k edit deploy nginx-deployment
+
+# make zero replication 
+k scale deploy nginx-deploy --replicas=0 
+
+# restart a deployment
+k rollout restart deploy nginx-deploy
+
+# check update history, .spec.revisionHistoryLimit (default is 10)
+k rollout history deploy nginx-deploy
+
+# roolout status
+k rollout status deploy apparmor 
+
+#roll-back
+k rollout undo deploy apparmor 
 ```
 
 ### Add labels
@@ -100,6 +124,9 @@ k create ingress simple --rule="foo.com/*=svc1:8080,tls=my-cert"
 ### Get events
 ```bash
 k get ev -w
+
+# get event by timestamp
+k -n ns get events --sort-by='{.metadata.creationTimestamp}'
 ```
 
 ### DNS record check
