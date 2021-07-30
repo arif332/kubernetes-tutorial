@@ -1,38 +1,42 @@
-# Kubernetes Commands
+**TOC: Kubernetes Commands**
 
-- [Kubernetes Commands](#kubernetes-commands)
-  - [Document History](#document-history)
-  - [Introduction](#introduction)
-    - [Vim profile to setup](#vim-profile-to-setup)
-    - [Environment variable to setup](#environment-variable-to-setup)
-  - [K8s Imperative Command](#k8s-imperative-command)
-    - [Create a busybox pod for testing](#create-a-busybox-pod-for-testing)
-    - [Create a deployment and expose service](#create-a-deployment-and-expose-service)
-    - [Activity on deployment](#activity-on-deployment)
-    - [Add labels](#add-labels)
-    - [Create Ingress Resource](#create-ingress-resource)
-    - [Get events](#get-events)
-    - [DNS record check](#dns-record-check)
-    - [Kube-bench: CIS bunchmark tool](#kube-bench-cis-bunchmark-tool)
-  - [Supporting Utilities](#supporting-utilities)
-    - [Curl command](#curl-command)
-    - [Create SSL Certificate](#create-ssl-certificate)
-  - [References](#references)
-  - [Appendix](#appendix)
-    - [Allow DNS traffic](#allow-dns-traffic)
-    - [Deny all traffic](#deny-all-traffic)
-    - [Allow all ingress traffic](#allow-all-ingress-traffic)
+- [1. Introduction](#1-introduction)
+- [2. Document History](#2-document-history)
+- [3. Environment Setup](#3-environment-setup)
+  - [3.1. Vim profile setup](#31-vim-profile-setup)
+  - [3.2. Environment variable setup](#32-environment-variable-setup)
+- [4. K8s Imperative Command](#4-k8s-imperative-command)
+  - [4.1. Create a busybox pod for testing](#41-create-a-busybox-pod-for-testing)
+  - [4.2. Create a deployment and expose service](#42-create-a-deployment-and-expose-service)
+  - [4.3. Activity on deployment](#43-activity-on-deployment)
+  - [4.4. Add labels](#44-add-labels)
+  - [4.5. Create Ingress Resource](#45-create-ingress-resource)
+  - [4.6. Get events](#46-get-events)
+  - [4.7. DNS record check](#47-dns-record-check)
+  - [4.8. Kube-bench: CIS bunchmark tool](#48-kube-bench-cis-bunchmark-tool)
+- [5. Supporting Utilities](#5-supporting-utilities)
+  - [5.1. Curl command](#51-curl-command)
+  - [5.2. Check SSL Certificate](#52-check-ssl-certificate)
+  - [5.3. Create SSL Certificate](#53-create-ssl-certificate)
+- [6. References](#6-references)
+- [7. Appendix](#7-appendix)
+  - [7.1. Allow DNS traffic](#71-allow-dns-traffic)
+  - [7.2. Deny all traffic](#72-deny-all-traffic)
+  - [7.3. Allow all ingress traffic](#73-allow-all-ingress-traffic)
 
 ---
 
-## Document History
+# 1. Introduction
+
+
+# 2. Document History
 ```
 2021-07-04 V1 "Initial k8s imperative command"
 ```
 
-## Introduction
+# 3. Environment Setup
 
-### Vim profile to setup
+## 3.1. Vim profile setup
 ```bash
 cat <<EOF>~/.vimrc
 set ts=2 sw=2 sts=2 et ai number
@@ -42,7 +46,7 @@ EOF
 # other options - paste, nopaste
 ```
 
-### Environment variable to setup
+## 3.2. Environment variable setup
 ```bash
 cat <<EOF>kalias.sh
 alias k="kubectl"
@@ -56,9 +60,9 @@ complete -F __start_kubectl k
 EOF
 source kalias.sh
 ```
-## K8s Imperative Command
+# 4. K8s Imperative Command
 
-### Create a busybox pod for testing
+## 4.1. Create a busybox pod for testing
 ```bash
 # buysbox pod with curl command
 k run client --image=radial/busyboxplus:curl -- /bin/sh -c "sleep 3600"
@@ -76,14 +80,14 @@ k attach busybox -c busybox -i -t
 k exec client -- nslookup client
 ```
 
-### Create a deployment and expose service
+## 4.2. Create a deployment and expose service
 ```bash
 k create deployment nginx-deploy --image=nginx -r 3
 
 #port=service port, target-port=pod port,
 k expose deployment nginx-deploy --port=80 --target-port=8080 --name nginx-svc
 ```
-### Activity on deployment
+## 4.3. Activity on deployment
 ```bash
 # change image version and record will keep history of the given command
 k set image deploy nginx-deploy nginx=nginx:1.16.1 --record
@@ -107,13 +111,13 @@ k rollout status deploy apparmor
 k rollout undo deploy apparmor 
 ```
 
-### Add labels
+## 4.4. Add labels
 ```bash
 k label ns nptest project=test
 k label pods client role=client
 ```
 
-### Create Ingress Resource 
+## 4.5. Create Ingress Resource 
 ```bash
 # exact match with a tls certificate, need to know svc name and port of svc
 k create ingress simple --rule="foo.com/bar=svc1:8080,tls=my-cert"
@@ -121,7 +125,7 @@ k create ingress simple --rule="foo.com/bar=svc1:8080,tls=my-cert"
 # any match with a tls, need to know svc name and port of svc
 k create ingress simple --rule="foo.com/*=svc1:8080,tls=my-cert"
 ```
-### Get events
+## 4.6. Get events
 ```bash
 k get ev -w
 
@@ -129,7 +133,7 @@ k get ev -w
 k -n ns get events --sort-by='{.metadata.creationTimestamp}'
 ```
 
-### DNS record check
+## 4.7. DNS record check
 ```bash
 k apply -f https://k8s.io/examples/admin/dns/dnsutils.yaml
 k exec -it dnsutils -- nslookup kubernetes.default
@@ -140,8 +144,9 @@ k exec client -- nslookup pod-name
 k logs -n kube-system -l k8s-app=kube-dns
 ```
 
-### Kube-bench: CIS bunchmark tool
+## 4.8. Kube-bench: CIS bunchmark tool
 ```bash
+# install kube-bench as a job
 k apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-master.yaml
 k apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-node.yaml
 k get pods
@@ -149,34 +154,46 @@ k logs <Control Plane Job Pod name> > kube-bench-results-control-plane.log
 
 k get jobs
 k delete job kube-bench-master
+
+# manually install kube-bench tool
+# curl -L https://github.com/aquasecurity/kube-bench/releases/download/v0.6.2/kube-bench_0.6.2_linux_amd64.tar.gz -o kube-bench_0.6.2_linux_amd64.tar.gz
+# tar -xvf kube-bench_0.6.2_linux_amd64.tar.gz
+
+./kube-bench --config-dir cfg
+./kube-bench --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml
 ``` 
 
-## Supporting Utilities
+# 5. Supporting Utilities
 
-### Curl command
+## 5.1. Curl command
 ```bash
 curl https://secure-ingress.com:31047/service1 -kv --resolve secure-ingress.com:31047:34.105.246.174
 curl https://secure-ingress.com:80/service1 -kv --resolve secure-ingress.com:80:34.105.246.174
 ```
 
-### Create SSL Certificate
+## 5.2. Check SSL Certificate
+```bash
+# check certificate information
+openssl x509 -in cert.pem -text
+```
+
+## 5.3. Create SSL Certificate
 ```bash
 openssl help req
 # generate cert and key which can be used in tls secret
 openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -new -nodes -subj "/CN=test.com"
 ```
 
-
 ---
 
-## References
+# 6. References
 - https://kubernetes.io/docs/reference/kubectl/cheatsheet/
 - https://github.com/aquasecurity/kube-bench
 
 ---
-## Appendix
+# 7. Appendix
 
-### Allow DNS traffic
+## 7.1. Allow DNS traffic
 ```bash
 cat <<EOF>allow-dns-traffic.yaml
 apiVersion: networking.k8s.io/v1
@@ -197,7 +214,7 @@ spec:
 EOF
 k create -f allow-dns-traffic.yaml
 ```
-### Deny all traffic
+## 7.2. Deny all traffic
 ```bash
 cat <<EOF>>default-deny-all.yaml
 apiVersion: networking.k8s.io/v1
@@ -213,7 +230,7 @@ EOF
 k -f default-deny-all.yaml create
 ```
 
-### Allow all ingress traffic
+## 7.3. Allow all ingress traffic
 ```bash
 cat <<EOF>>allow-all-ingress.yaml
 apiVersion: networking.k8s.io/v1
