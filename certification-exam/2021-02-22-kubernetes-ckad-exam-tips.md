@@ -57,6 +57,23 @@ EOF
 source kalias.sh
 ```
 
+Command alias and environment will help to type or generate yaml spec quickly and then modify specification file if required.
+```bash
+# check current context (as per command alias above)
+kcc 
+
+# set namespace (as per command alias above)
+kn namespace
+
+# check necessary information by one command (as per command alias above)
+aa
+
+# for pod spec
+k run podname --image=nginx $do > pod-spec.yaml
+
+# for deployment spec
+k create deployment nginx-deploy --image=nginx -r 3 $do > deployment-spec.yaml
+```
 
 
 ## Tmux Setting
