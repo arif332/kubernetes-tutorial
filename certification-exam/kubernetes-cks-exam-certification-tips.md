@@ -75,9 +75,9 @@ Tmux is a great tool but I havn't used because copy and paste method is differen
 
 
 
-## Bookmark Allowed Website: Important Content / Exam Objective Example ([Mainly kubernetes.io](kubernetes.io))
+## Bookmark Allowed Website: Important Content / Exam Objective Example ([Mainly kubernetes.io](https://kubernetes.io))
 
-In my bookmark manager, I added necessary sample yaml and exam objective topics from [kubernetes](kubernetes.io) and external allowed sites so that I could check content quickly when it is required to solve the exam question. 
+In my bookmark manager, I added necessary sample yaml and exam objective topics from [kubernetes](https://kubernetes.io) and external allowed sites so that I could check content quickly when it is required to solve the exam question. 
 
 
 
@@ -97,8 +97,8 @@ In this way, most likely, you will be able to avoid troubleshooting activity for
 
 
 # References
-- https://www.cncf.io/certification/cks/
-- https://docs.linuxfoundation.org/tc-docs/certification/important-instructions-cks
+- [CNCF](https://www.cncf.io/certification/cks/)
+- [CNCF Important Information Regarding CKS Exam](https://docs.linuxfoundation.org/tc-docs/certification/important-instructions-cks)
 - [Kubernetes Security Essentials (LFS260) by THE LINUX FOUNDATION](https://training.linuxfoundation.org/training/kubernetes-security-essentials-lfs260/)
 - [Kubernetes CKS 2021 Complete Course - Theory - Practice by Kim Wüstkamp, Killer Shell](https://www.udemy.com/share/103Mds2@FG1jV2JjSVEHdEBGC3JNfT1HYA==/)
 - [Certified Kubernetes Security Specialist (CKS) by William Boyd, A CLOUD GURU](https://acloudguru.com/course/certified-kubernetes-security-specialist-cks)
@@ -109,36 +109,41 @@ In this way, most likely, you will be able to avoid troubleshooting activity for
 # Appendix
 
 ## Bookmark Link for the Study
-- https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/
-- https://kubernetes.io/blog/2019/08/06/opa-gatekeeper-policy-and-governance-for-kubernetes/
-- https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#imagepolicywebhook
-- https://kubernetes.io/docs/reference/access-authn-authz/webhook/
-- https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/#options
-- https://github.com/kubernetes/dashboard/blob/master/docs/common/dashboard-arguments.md
-- https://kubernetes.io/docs/concepts/services-networking/ingress/
-- https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource
-- https://kubernetes.io/docs/concepts/security/controlling-access/
-- https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
-- https://kubernetes.io/docs/reference/access-authn-authz/rbac/
-- https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/
-- https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-- https://kubernetes.io/docs/concepts/policy/pod-security-policy/
-- https://kubernetes.io/docs/concepts/security/pod-security-standards/
-- https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#securitycontext-v1-core
-- https://kubernetes.io/docs/concepts/containers/runtime-class/
-- https://kubernetes.io/docs/tutorials/clusters/apparmor/
-- https://kubernetes.io/docs/tutorials/clusters/seccomp/#create-a-pod-with-a-seccomp-profile-for-syscall-auditing
-- https://kubernetes.io/docs/tasks/debug-application-cluster/audit/
-- https://kubernetes.io/blog/2018/07/18/11-ways-not-to-get-hacked/
-- https://aquasecurity.github.io/trivy/v0.18.3/
-- https://github.com/aquasecurity/kube-bench
-- https://gitlab.com/apparmor/apparmor/-/wikis/Documentation
-- https://falco.org/docs/
-- https://docs.sysdig.com/?lang=en
-- https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/
-- https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/
-- https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
-- https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
+- [Kube-bench: CIS Benchmark](https://github.com/aquasecurity/kube-bench)
+- [Encrypt Data](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/)
+- [OPA-gatekeeper-policy-and-governance-for-kubernetes](https://kubernetes.io/blog/2019/08/06/opa-gatekeeper-policy-and-governance-for-kubernetes/)
+- [Imagepolicywebhook](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/#imagepolicywebhook)
+- [Dynamic Admission Control](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+- [Webhook Mode](https://kubernetes.io/docs/reference/access-authn-authz/webhook/)
+- [Kube-apiserver Parameter Reference](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/#options)
+- [Kubernetes Dashboard-arguments](https://github.com/kubernetes/dashboard/blob/master/docs/common/dashboard-arguments.md)
+- [Ingress TLS](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+- [Network Policies](https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource)
+- [Controlling Access to the Kubernetes API](https://kubernetes.io/docs/concepts/security/controlling-access/)
+- [Configure Service Accounts for Pods](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/)
+- [Using RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+- [Certificate-signing-requests/](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)
+- [Managing-tls-in-a-cluster](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/)
+- [Security-context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+- [Pod-security-policy](https://kubernetes.io/docs/concepts/policy/pod-security-policy/)
+- [Pod-security-standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/)
+- [Kubernetes API securitycontext-v1-core](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#securitycontext-v1-core)
+- [Runtime Class: Sandboxes using gVisor](https://kubernetes.io/docs/concepts/containers/runtime-class/)
+- [Apparmor: Kernel Hardening tools](https://kubernetes.io/docs/tutorials/clusters/apparmor/)
+- [Seccomp: Kernel Hardening tools](https://kubernetes.io/docs/tutorials/clusters/seccomp#create-a-pod-with-a-seccomp-profile-for-syscall-auditing)
+- [Auditing: Policy Configuration](https://kubernetes.io/docs/tasks/debug-application-cluster/audit/)
+- [K8s blog: 11-ways-not-to-get-hacked Kubernetes](https://kubernetes.io/blog/2018/07/18/11-ways-not-to-get-hacked/)
+- [Trivy : Image Scanner](https://aquasecurity.github.io/trivy/v0.18.3/)
+- [Apparmor Wiki](https://gitlab.com/apparmor/apparmor/-/wikis/Documentation)
+- [Falco: Runtime Security](https://falco.org/docs/)
+- [Sysdig: Monitor Security](https://docs.sysdig.com/?lang=en)
+- [Podsecuritypolicy-deprecation-past-present-and-future](https://kubernetes.io/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/)
+- [Static Analysis: docker best practice-1](https://sysdig.com/blog/dockerfile-best-practices/)
+- [Static Analysis: Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+- [kubelet Parameter Reference](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/)
+- [Kubeadm Upgrade](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/)
+
+
 
 ## Frequenly Use vi/vim commands
 
