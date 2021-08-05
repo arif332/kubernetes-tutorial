@@ -14,15 +14,21 @@
   - [4.6. Get events](#46-get-events)
   - [4.7. DNS record check](#47-dns-record-check)
   - [4.8. Kube-bench: CIS bunchmark tool](#48-kube-bench-cis-bunchmark-tool)
+  - [4.9. Image Vulnerability Scanning using Trivy](#49-image-vulnerability-scanning-using-trivy)
+  - [4.10. OPA : Policy Definition](#410-opa--policy-definition)
+  - [4.11. Using Container runtime (Sandboxes)](#411-using-container-runtime-sandboxes)
+  - [4.12. Kernel Hardening tools - AppArmor](#412-kernel-hardening-tools---apparmor)
+  - [4.13. Kernel Hardening tools - Seccomp](#413-kernel-hardening-tools---seccomp)
 - [5. Supporting Utilities](#5-supporting-utilities)
   - [5.1. Curl command](#51-curl-command)
   - [5.2. Check SSL Certificate](#52-check-ssl-certificate)
   - [5.3. Create SSL Certificate](#53-create-ssl-certificate)
 - [6. References](#6-references)
 - [7. Appendix](#7-appendix)
-  - [7.1. Allow DNS traffic](#71-allow-dns-traffic)
-  - [7.2. Deny all traffic](#72-deny-all-traffic)
-  - [7.3. Allow all ingress traffic](#73-allow-all-ingress-traffic)
+  - [7.1. gVisor Installation](#71-gvisor-installation)
+  - [7.2. Allow DNS traffic](#72-allow-dns-traffic)
+  - [7.3. Deny all traffic](#73-deny-all-traffic)
+  - [7.4. Allow all ingress traffic](#74-allow-all-ingress-traffic)
 
 ---
 
@@ -163,6 +169,93 @@ k delete job kube-bench-master
 ./kube-bench --config-dir `pwd`/cfg --config `pwd`/cfg/config.yaml
 ``` 
 
+
+## 4.9. Image Vulnerability Scanning using Trivy
+```bash
+# install trivy after adding repo to apt
+sudo apt-get install trivy
+
+# check high and critical vulnerability, command argument will vary depends on the version of trivy
+trivy nginx | egrep -i "HIGH|critical"
+trivy image nginx | egrep -i "HIGH|critical"
+```
+
+## 4.10. OPA : Policy Definition
+```bash
+# get Custom Resource Definitions (CRDs)
+k get crd
+
+k get constrainttemplate <template-name>
+k describe constrainttemplate <template-name>
+
+# to modify OPA policy 
+k edit constrainttemplate <template-name> 
+```
+
+## 4.11. Using Container runtime (Sandboxes)
+Create a RuntimeClass and use that while creating pods. Follow appendix for the gVisor installation. 
+```bash
+cat <<EOF>>runtimesc.yaml
+apiVersion: node.k8s.io/v1  
+kind: RuntimeClass
+metadata:
+  name: myclass  
+handler: runsc 
+EOF
+k create -f runtimesc.yaml
+
+# pod definition
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  runtimeClassName: myclass
+...
+
+# check logs and compare
+kubectl exec non-sandbox-pod -- dmesg 
+```
+
+##  4.12. Kernel Hardening tools - AppArmor
+```bash
+# install apparmor util 
+apt-get install apparmor-util
+
+# profile location: /etc/apparmor.d
+
+# generate docker-nginx profile by below command 
+apparmor_parser /etc/apparmor.d/docker-nginx
+
+# verify profile status
+aa-status
+
+# now use apparmor profile in pod definition file to enforce profile
+k run secure --image=nginx $do > secure.yaml
+vim secure.yaml # add pod annotation key and value, as per velow format
+# container.apparmor.security.beta.kubernetes.io/<container_name>: localhost/<profile_name>
+
+k -f secure.yaml create
+```
+
+## 4.13. Kernel Hardening tools - Seccomp
+```bash
+# seccomp's profile location is define in kubelet config using --seccomp-profile-root 
+# --seccomp-profile-root flag is deprecated since Kubernetes v1.19
+
+# add seccomp profile in pod defination
+# default profile location: /var/lib/kubelet/seccomp
+
+# pod definition 
+...
+spec:
+  securityContext:
+    seccompProfile:
+      type: Localhost
+      localhostProfile: audit.json
+...      
+```
+
 # 5. Supporting Utilities
 
 ## 5.1. Curl command
@@ -187,13 +280,49 @@ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -new -nodes -su
 ---
 
 # 6. References
-- https://kubernetes.io/docs/reference/kubectl/cheatsheet/
-- https://github.com/aquasecurity/kube-bench
+- [Kubernetes cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+- [Kube-bench](https://github.com/aquasecurity/kube-bench)
+- [gVisor](https://gvisor.dev/docs/user_guide/install/)
 
 ---
 # 7. Appendix
 
-## 7.1. Allow DNS traffic
+## 7.1. [gVisor Installation](https://gvisor.dev/docs/user_guide/install/)
+```bash
+# https://gvisor.dev/docs/user_guide/install/
+# gVisor / runsc
+# install gVisor
+curl -fsSL https://gvisor.dev/archive.key | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64,arm64] https://storage.googleapis.com/gvisor/releases release main"
+sudo apt-get update && sudo apt-get install -y runsc
+
+# create runsc config
+sudo vi /etc/containerd/config.toml
+
+# Find the disabled_plugins section and add the restart plugin.
+ disabled_plugins = ["io.containerd.internal.v1.restart"]
+
+# Find the block [plugins."io.containerd.grpc.v1.cri".containerd.runtimes]. 
+# After the existing runc block, add configuration for a runsc runtime. It should look like this when done:
+
+[plugins."io.containerd.grpc.v1.cri".containerd.runtimes]
+  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+    runtime_type = "io.containerd.runc.v1"
+    runtime_engine = ""
+    runtime_root = ""
+    privileged_without_host_devices = false
+  [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runsc]
+    runtime_type = "io.containerd.runsc.v1"
+
+# Locate the block and set   to true .
+[plugins."io.containerd.runtime.v1.linux"] ...
+  shim_debug = true
+
+sudo systemctl restart containerd
+sudo systemctl status containerd
+```
+
+## 7.2. Allow DNS traffic
 ```bash
 cat <<EOF>allow-dns-traffic.yaml
 apiVersion: networking.k8s.io/v1
@@ -214,7 +343,7 @@ spec:
 EOF
 k create -f allow-dns-traffic.yaml
 ```
-## 7.2. Deny all traffic
+## 7.3. Deny all traffic
 ```bash
 cat <<EOF>>default-deny-all.yaml
 apiVersion: networking.k8s.io/v1
@@ -230,7 +359,7 @@ EOF
 k -f default-deny-all.yaml create
 ```
 
-## 7.3. Allow all ingress traffic
+## 7.4. Allow all ingress traffic
 ```bash
 cat <<EOF>>allow-all-ingress.yaml
 apiVersion: networking.k8s.io/v1
