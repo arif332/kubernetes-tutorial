@@ -13,22 +13,23 @@
   - [4.5. Create Ingress Resource](#45-create-ingress-resource)
   - [4.6. Get events](#46-get-events)
   - [4.7. DNS record check](#47-dns-record-check)
-  - [4.8. Kube-bench: CIS bunchmark tool](#48-kube-bench-cis-bunchmark-tool)
-  - [4.9. Image Vulnerability Scanning using Trivy](#49-image-vulnerability-scanning-using-trivy)
-  - [4.10. OPA : Policy Definition](#410-opa--policy-definition)
-  - [4.11. Using Container runtime (Sandboxes)](#411-using-container-runtime-sandboxes)
-  - [4.12. Kernel Hardening tools - AppArmor](#412-kernel-hardening-tools---apparmor)
-  - [4.13. Kernel Hardening tools - Seccomp](#413-kernel-hardening-tools---seccomp)
-- [5. Supporting Utilities](#5-supporting-utilities)
-  - [5.1. Curl command](#51-curl-command)
-  - [5.2. Check SSL Certificate](#52-check-ssl-certificate)
-  - [5.3. Create SSL Certificate](#53-create-ssl-certificate)
-- [6. References](#6-references)
-- [7. Appendix](#7-appendix)
-  - [7.1. gVisor Installation](#71-gvisor-installation)
-  - [7.2. Allow DNS traffic](#72-allow-dns-traffic)
-  - [7.3. Deny all traffic](#73-deny-all-traffic)
-  - [7.4. Allow all ingress traffic](#74-allow-all-ingress-traffic)
+- [5. Kubernetes Security](#5-kubernetes-security)
+  - [5.1. Kube-bench: CIS bunchmark tool](#51-kube-bench-cis-bunchmark-tool)
+  - [5.2. Image Vulnerability Scanning using Trivy](#52-image-vulnerability-scanning-using-trivy)
+  - [5.3. OPA : Policy Definition](#53-opa--policy-definition)
+  - [5.4. Using Container runtime (Sandboxes)](#54-using-container-runtime-sandboxes)
+  - [5.5. Kernel Hardening tools - AppArmor](#55-kernel-hardening-tools---apparmor)
+  - [5.6. Kernel Hardening tools - Seccomp](#56-kernel-hardening-tools---seccomp)
+- [6. Supporting Utilities](#6-supporting-utilities)
+  - [6.1. Curl command](#61-curl-command)
+  - [6.2. Check SSL Certificate](#62-check-ssl-certificate)
+  - [6.3. Create SSL Certificate](#63-create-ssl-certificate)
+- [7. References](#7-references)
+- [8. Appendix](#8-appendix)
+  - [8.1. gVisor Installation](#81-gvisor-installation)
+  - [8.2. Allow DNS traffic](#82-allow-dns-traffic)
+  - [8.3. Deny all traffic](#83-deny-all-traffic)
+  - [8.4. Allow all ingress traffic](#84-allow-all-ingress-traffic)
 
 ---
 
@@ -150,7 +151,9 @@ k exec client -- nslookup pod-name
 k logs -n kube-system -l k8s-app=kube-dns
 ```
 
-## 4.8. Kube-bench: CIS bunchmark tool
+# 5. Kubernetes Security
+
+## 5.1. Kube-bench: CIS bunchmark tool
 ```bash
 # install kube-bench as a job
 k apply -f https://raw.githubusercontent.com/aquasecurity/kube-bench/main/job-master.yaml
@@ -170,7 +173,7 @@ k delete job kube-bench-master
 ``` 
 
 
-## 4.9. Image Vulnerability Scanning using Trivy
+## 5.2. Image Vulnerability Scanning using Trivy
 ```bash
 # install trivy after adding repo to apt
 sudo apt-get install trivy
@@ -180,7 +183,7 @@ trivy nginx | egrep -i "HIGH|critical"
 trivy image nginx | egrep -i "HIGH|critical"
 ```
 
-## 4.10. OPA : Policy Definition
+## 5.3. OPA : Policy Definition
 ```bash
 # get Custom Resource Definitions (CRDs)
 k get crd
@@ -192,7 +195,7 @@ k describe constrainttemplate <template-name>
 k edit constrainttemplate <template-name> 
 ```
 
-## 4.11. Using Container runtime (Sandboxes)
+## 5.4. Using Container runtime (Sandboxes)
 Create a RuntimeClass and use that while creating pods. Follow appendix for the gVisor installation. 
 ```bash
 cat <<EOF>>runtimesc.yaml
@@ -217,7 +220,7 @@ spec:
 kubectl exec non-sandbox-pod -- dmesg 
 ```
 
-##  4.12. Kernel Hardening tools - AppArmor
+##  5.5. Kernel Hardening tools - AppArmor
 ```bash
 # install apparmor util 
 apt-get install apparmor-util
@@ -238,7 +241,7 @@ vim secure.yaml # add pod annotation key and value, as per velow format
 k -f secure.yaml create
 ```
 
-## 4.13. Kernel Hardening tools - Seccomp
+## 5.6. Kernel Hardening tools - Seccomp
 ```bash
 # seccomp's profile location is define in kubelet config using --seccomp-profile-root 
 # --seccomp-profile-root flag is deprecated since Kubernetes v1.19
@@ -256,21 +259,21 @@ spec:
 ...      
 ```
 
-# 5. Supporting Utilities
+# 6. Supporting Utilities
 
-## 5.1. Curl command
+## 6.1. Curl command
 ```bash
 curl https://secure-ingress.com:31047/service1 -kv --resolve secure-ingress.com:31047:34.105.246.174
 curl https://secure-ingress.com:80/service1 -kv --resolve secure-ingress.com:80:34.105.246.174
 ```
 
-## 5.2. Check SSL Certificate
+## 6.2. Check SSL Certificate
 ```bash
 # check certificate information
 openssl x509 -in cert.pem -text
 ```
 
-## 5.3. Create SSL Certificate
+## 6.3. Create SSL Certificate
 ```bash
 openssl help req
 # generate cert and key which can be used in tls secret
@@ -279,15 +282,15 @@ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -new -nodes -su
 
 ---
 
-# 6. References
+# 7. References
 - [Kubernetes cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 - [Kube-bench](https://github.com/aquasecurity/kube-bench)
 - [gVisor](https://gvisor.dev/docs/user_guide/install/)
 
 ---
-# 7. Appendix
+# 8. Appendix
 
-## 7.1. [gVisor Installation](https://gvisor.dev/docs/user_guide/install/)
+## 8.1. [gVisor Installation](https://gvisor.dev/docs/user_guide/install/)
 ```bash
 # https://gvisor.dev/docs/user_guide/install/
 # gVisor / runsc
@@ -322,7 +325,7 @@ sudo systemctl restart containerd
 sudo systemctl status containerd
 ```
 
-## 7.2. Allow DNS traffic
+## 8.2. Allow DNS traffic
 ```bash
 cat <<EOF>allow-dns-traffic.yaml
 apiVersion: networking.k8s.io/v1
@@ -343,7 +346,7 @@ spec:
 EOF
 k create -f allow-dns-traffic.yaml
 ```
-## 7.3. Deny all traffic
+## 8.3. Deny all traffic
 ```bash
 cat <<EOF>>default-deny-all.yaml
 apiVersion: networking.k8s.io/v1
@@ -359,7 +362,7 @@ EOF
 k -f default-deny-all.yaml create
 ```
 
-## 7.4. Allow all ingress traffic
+## 8.4. Allow all ingress traffic
 ```bash
 cat <<EOF>>allow-all-ingress.yaml
 apiVersion: networking.k8s.io/v1
