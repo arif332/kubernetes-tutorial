@@ -178,6 +178,9 @@ k delete job kube-bench-master
 # install trivy after adding repo to apt
 sudo apt-get install trivy
 
+# All images running in namespace: default, grouped by Pod
+k get pods -n default --output=custom-columns="NAME:.metadata.name,IMAGE:.spec.containers[*].image"
+
 # check high and critical vulnerability, command argument will vary depends on the version of trivy
 trivy nginx | egrep -i "HIGH|critical"
 trivy image nginx | egrep -i "HIGH|critical"
