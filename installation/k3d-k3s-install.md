@@ -3,14 +3,15 @@
 **Table of Content**
 
 - [1. Introduction](#1-introduction)
-- [2. Installation in MacOS ARM64](#2-installation-in-macos-arm64)
-- [3. Use of K3d](#3-use-of-k3d)
-  - [3.1. Single node k3s Cluster](#31-single-node-k3s-cluster)
-  - [3.2. Multi-node K3s Cluster](#32-multi-node-k3s-cluster)
-  - [3.3. K3d Operation Commands](#33-k3d-operation-commands)
-- [4. References](#4-references)
-- [5. Appendix](#5-appendix)
-  - [5.1. Possible config parameters](#51-possible-config-parameters)
+- [2. K3d Installation on MacOS ARM64](#2-k3d-installation-on-macos-arm64)
+- [3. K3d Installation on Ubuntu (Intel CPU)](#3-k3d-installation-on-ubuntu-intel-cpu)
+- [4. Use of K3d](#4-use-of-k3d)
+  - [4.1. Single node k3s Cluster](#41-single-node-k3s-cluster)
+  - [4.2. Multi-node K3s Cluster](#42-multi-node-k3s-cluster)
+  - [4.3. K3d Operation Commands](#43-k3d-operation-commands)
+- [5. References](#5-references)
+- [6. Appendix](#6-appendix)
+  - [6.1. Possible config parameters](#61-possible-config-parameters)
 
 
 
@@ -19,14 +20,19 @@
 Lightweight kubernetes (K3s) in Docker (K3d) is a community project. 
 
 
-# 2. Installation in MacOS ARM64
+# 2. K3d Installation on MacOS ARM64
 ```bash
 brew install k3d
 ```
 
-# 3. Use of K3d
+# 3. K3d Installation on Ubuntu (Intel CPU)
+```bash
+wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+```
 
-## 3.1. Single node k3s Cluster
+# 4. Use of K3d
+
+## 4.1. Single node k3s Cluster
 Create a single node k3s cluster 
 ```bash
 k3d cluster create mycluster
@@ -37,12 +43,12 @@ kubectl get nodes
 kubectl config get-contexts
 ```
 
-## 3.2. Multi-node K3s Cluster
+## 4.2. Multi-node K3s Cluster
 ```bash
 k3d cluster create mycluster1 --servers 1  --agents 1
 ```
 
-## 3.3. K3d Operation Commands
+## 4.3. K3d Operation Commands
 List k3d cluster - 
 ```bash
 k3d cluster list
@@ -65,16 +71,16 @@ k3d node start NODE
 k3d node stop NODE
 ```
 
-# 4. References
+# 5. References
 - https://k3d.io
 - https://k3d.io/v5.2.1/usage/configfile/
 - https://github.com/rancher/k3d
 - https://github.com/Homebrew/homebrew-core/blob/master/Formula/k3d.rb
 
 
-# 5. Appendix
+# 6. Appendix
 
-## 5.1. Possible config parameters
+## 6.1. Possible config parameters
 ```yaml
 # k3d configuration file, saved as e.g. /home/me/myk3dcluster.yaml
 apiVersion: k3d.io/v1alpha3 # this will change in the future as we make everything more stable
