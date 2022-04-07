@@ -14,6 +14,7 @@
   - [4.5. Create Ingress Resource](#45-create-ingress-resource)
   - [4.6. Get events](#46-get-events)
   - [4.7. DNS record check](#47-dns-record-check)
+  - [4.8. Fort Forward to Service/Pod](#48-fort-forward-to-servicepod)
 - [5. Kubernetes Security](#5-kubernetes-security)
   - [5.1. Kube-bench: CIS bunchmark tool](#51-kube-bench-cis-bunchmark-tool)
   - [5.2. Image Vulnerability Scanning using Trivy](#52-image-vulnerability-scanning-using-trivy)
@@ -188,6 +189,19 @@ k exec client -- nslookup pod-name
 #dns sever check
 k logs -n kube-system -l k8s-app=kube-dns
 ```
+
+## 4.8. Fort Forward to Service/Pod
+
+```bash
+# listen on 0.0.0.0:9021 which allow to connect from external host
+k port-forward controlcenter-0 9021:9021 --address='0.0.0.0'
+```
+
+
+
+
+
+
 
 # 5. Kubernetes Security
 
