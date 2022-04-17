@@ -11,7 +11,8 @@ Kubernetes related experiment, configuration and documentation.
 ## Installation
 - [Kubernetes Installation using Vagrant + Virtualbox](installation/kubernetes-installation.md)
 - [Kubernetes in Docker (Kind)](installation/kind-install.md)
-- [Lightweight Kubernetes K3s in Docker (K3d)](installation/k3d-k3s-install.md)
+- [Lightweight Kubernetes K3s in Docker (K3d)](installation/k3d-k3s/k3d-k3s-install.md)
+- [Lightweight Kubernetes K3s in Docker (K3d) with metallb and nginx ingress controller](installation/k3d-k3s/k3d-metallb-nginx-ingress-integration.md)
 
   
 
