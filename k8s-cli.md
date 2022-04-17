@@ -48,11 +48,12 @@
 ## 3.1. Vim profile setup
 ```bash
 cat <<EOF>~/.vimrc
-set ts=2 sw=2 sts=2 et ai number
+set ts=2 sw=2 sts=2 et ai number colorcolumn=3,5,7,9
 syntax on
 colorscheme ron
 EOF
 # other options - paste, nopaste
+# visual line(shift+v) / visual block(ctl+v) mode will help a lot to edit yaml config comfortably
 ```
 
 ## 3.2. Environment variable setup
