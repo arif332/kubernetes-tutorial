@@ -4,6 +4,7 @@ Kubernetes related experiment, configuration and documentation.
 # Table of Content
 - [Table of Content](#table-of-content)
   - [Installation](#installation)
+  - [Development Pipeline](#development-pipeline)
   - [Certified Kubernetes Exam Preparation Tips](#certified-kubernetes-exam-preparation-tips)
   - [Commands](#commands)
   - [LoadBalancer](#loadbalancer)
@@ -15,7 +16,11 @@ Kubernetes related experiment, configuration and documentation.
 - [Lightweight Kubernetes K3s in Docker (K3d) with metallb and nginx ingress controller](installation/k3d-k3s/k3d-metallb-nginx-ingress-integration.md)
 - [dnsmasq on macos](installation/custom-dnsmasq-macos.md)
 
-  
+
+## Development Pipeline
+- [Local Development Pipeline Using Skaffold on Kubernetes](installation/k3d-k3s/k3d-k3s-skaffold-integration.md)  
+
+
 
 ## Certified Kubernetes Exam Preparation Tips
 - [CKS Exam Preparation Tips](certification-exam/kubernetes-cks-exam-certification-tips.md)
