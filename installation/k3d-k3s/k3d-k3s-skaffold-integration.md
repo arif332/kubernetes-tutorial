@@ -10,7 +10,7 @@
 
 # 1. Local Development Pipeline Using Skaffold on Kubernetes 
 
-I have used Skaffold to automate a development pipeline for the Kubernetes-based application development. The development pipeline will automate repeated tasks and provide enhanced, hassle-free, faster development experiences.
+I have used Skaffold to automate a development pipeline for the Kubernetes-based application development. The development pipeline will automate repeated tasks and provide enhanced, hassle-free, faster development experiences. This article shares the integration process and lessons learn while doing the development pipeline.
 
 List of tools:
 - Skaffold: Pipeline automation software
